@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="course_image_cd">Course image</string>
+    <string name="favorite_button_cd">Favorite</string>
+    <string name="details_button">Подробнее</string>
+</resources>

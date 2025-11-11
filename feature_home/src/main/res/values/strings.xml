@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_courses_hint">Search courses...</string>
+    <string name="filter_button_cd">Filter</string>
+    <string name="sort_by_date">По дате добавления</string>
+    <string name="sort_icon_cd">Sort</string>
+</resources>
