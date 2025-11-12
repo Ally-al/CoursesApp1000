@@ -1,20 +1,16 @@
 package com.example.feature_login.presentation
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.feature_login.presentation.LoginNavigator
-import com.example.feature_login.presentation.LoginViewModel
 import com.example.feature_login.databinding.FragmentLoginBinding
 import kotlinx.coroutines.launch
 
@@ -54,11 +50,9 @@ class LoginFragment : Fragment() {
         binding.etEmail.addTextChangedListener { onFieldsChanged() }
         binding.etPassword.addTextChangedListener { onFieldsChanged() }
 
-        binding.btnLogin.setOnClickListener {
-            navigator?.navigateToHome()
-        }
-        binding.btnVK.setOnClickListener { openUrl("https://vk.com/") }
-        binding.btnOK.setOnClickListener { openUrl("https://ok.ru/") }
+        binding.btnLogin.setOnClickListener { navigator?.navigateToHome() }
+        binding.btnVK.setOnClickListener { navigator?.openUrl("https://vk.com/") }
+        binding.btnOK.setOnClickListener { navigator?.openUrl("https://ok.ru/") }
     }
 
     private fun onFieldsChanged() {
@@ -66,11 +60,6 @@ class LoginFragment : Fragment() {
             email = binding.etEmail.text.toString(),
             password = binding.etPassword.text.toString()
         )
-    }
-
-    private fun openUrl(url: String) {
-        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-        startActivity(intent)
     }
 
     override fun onDestroyView() {

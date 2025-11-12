@@ -6,49 +6,54 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.core.presentation.CourseAdapter
-import com.example.feature_home.R
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
+import com.example.core.presentation.CoursesAdapter
+import com.example.feature_home.databinding.FragmentHomeBinding
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
-    private lateinit var rvCourses: RecyclerView
-    private lateinit var adapter: ListDelegationAdapter<List<com.example.domain.model.Course>>
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var coursesAdapter: CoursesAdapter
+
+    @Inject
+    lateinit var viewModelFactory: HomeViewModelFactory
+    private val viewModel: HomeViewModel by viewModels { viewModelFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        rvCourses = view.findViewById(R.id.rvCourses)
-        return view
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ListDelegationAdapter(
-            CourseAdapter(
-                onCourseClick = { /* ничего не делаем */ },
-                onFavoriteClick = { /* можно обработать лайк */ }
-            )
+        coursesAdapter = CoursesAdapter(
+            onCourseClick = {},
+            onFavoriteClick = { courseId -> viewModel.toggleFavorite(courseId) }
         )
 
-        rvCourses.layoutManager = LinearLayoutManager(requireContext())
-        rvCourses.adapter = adapter
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.courses.collectLatest { courses ->
-                adapter.items = courses
-                adapter.notifyDataSetChanged()
-            }
+        binding.rvCourses.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = coursesAdapter
         }
+
+        viewModel.courses.observe(viewLifecycleOwner) { courses ->
+            coursesAdapter.submitList(courses)
+        }
+
+        binding.tvSort.setOnClickListener { viewModel.sortCoursesByDate() }
+        binding.ivSort.setOnClickListener { viewModel.sortCoursesByDate() }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
