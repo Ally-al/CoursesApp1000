@@ -27,7 +27,7 @@
 **Запуск проекта**
 
 **Вариант 1 — скачать готовое приложение**  
-- Скачать приложение [CoursesApp1000.apk (v1.0)](https://github.com/Ally-al/CoursesApp1000/releases/tag/v1.0/courses1000_1) и установить на устройство Android
+- Скачать приложение [courses1000_1.apk (v1.0)](https://github.com/Ally-al/CoursesApp1000/releases/tag/v1.0/courses1000_1) и установить на устройство Android
 
 **Вариант 2 — собрать проект вручную**  
 1. Клонировать репозиторий  
