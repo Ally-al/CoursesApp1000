@@ -57,8 +57,4 @@ class HomeViewModel @Inject constructor(
     fun toggleSort() {
         _sortDesc.value = !_sortDesc.value
     }
-
-    fun setSortDesc(enabled: Boolean) {
-        _sortDesc.value = enabled
-    }
 }
