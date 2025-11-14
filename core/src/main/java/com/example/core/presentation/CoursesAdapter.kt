@@ -1,5 +1,8 @@
 package com.example.core.presentation
 
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.model.Course
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager
@@ -8,24 +11,27 @@ import kotlin.collections.mutableListOf
 class CoursesAdapter(
     onCourseClick: (Int) -> Unit,
     onFavoriteClick: (Int) -> Unit
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : ListAdapter<Course, RecyclerView.ViewHolder>(CourseDiffCallback()) {
 
-    private val items = mutableListOf<Course>()
     private val delegatesManager = AdapterDelegatesManager<List<Course>>()
         .addDelegate(CourseAdapterDelegates(onCourseClick, onFavoriteClick))
 
-    override fun getItemCount(): Int = items.size
-
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int) =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         delegatesManager.onCreateViewHolder(parent, viewType)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        delegatesManager.onBindViewHolder(items, position, holder, mutableListOf<Any>())
+        delegatesManager.onBindViewHolder(currentList, position, holder, mutableListOf<Any>())
     }
 
-    fun submitList(courses: List<Course>) {
-        items.clear()
-        items.addAll(courses)
-        notifyDataSetChanged()
+    override fun getItemViewType(position: Int): Int {
+        return delegatesManager.getItemViewType(currentList, position)
+    }
+
+    class CourseDiffCallback : DiffUtil.ItemCallback<Course>() {
+        override fun areItemsTheSame(oldItem: Course, newItem: Course): Boolean =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Course, newItem: Course): Boolean =
+            oldItem == newItem
     }
 }

@@ -63,8 +63,8 @@ class HomeFragment : Fragment() {
             coursesAdapter.submitList(courses)
         }
 
-        binding.tvSort.setOnClickListener { viewModel.sortCoursesByDateDesc() }
-        binding.ivSort.setOnClickListener { viewModel.sortCoursesByDateDesc() }
+        binding.tvSort.setOnClickListener { viewModel.toggleSort() }
+        binding.ivSort.setOnClickListener { viewModel.toggleSort() }
     }
 
     override fun onDestroyView() {

@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.core.R
 import com.example.core.databinding.ItemCourseBinding
 import com.example.domain.model.Course
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
-import com.example.core.R
 import com.example.core.utils.formatDate
 
 class CourseAdapterDelegates(
@@ -32,15 +32,15 @@ class CourseAdapterDelegates(
         holder: RecyclerView.ViewHolder,
         payloads: MutableList<Any>
     ) {
-        (holder as CourseViewHolder).bind(items[position])
+        (holder as CourseViewHolder).bind(items[position], position)
     }
 
     inner class CourseViewHolder(private val binding: ItemCourseBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(course: Course) {
+        fun bind(course: Course, position: Int) {
             val covers = listOf(R.drawable.cover1, R.drawable.cover2, R.drawable.cover3)
-            val coverResId = covers[adapterPosition % covers.size]
+            val coverResId = covers[position % covers.size]
 
             Glide.with(binding.ivCourseImage.context)
                 .load(coverResId)
