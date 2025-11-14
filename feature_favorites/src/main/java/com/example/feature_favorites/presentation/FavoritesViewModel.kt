@@ -2,14 +2,23 @@ package com.example.feature_favorites.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.core.FavoritesManager
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Course
+import com.example.domain.usecase.FavoritesUseCases
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesViewModel : ViewModel() {
+class FavoritesViewModel @Inject constructor(
+    private val favoritesUseCases: FavoritesUseCases
+) : ViewModel() {
 
-    val favoriteCourses: LiveData<List<Course>> = FavoritesManager.favoriteCourses
+    val favoriteCourses: LiveData<List<Course>> =
+        favoritesUseCases.getFavoriteCourses.execute().asLiveData()
 
     fun toggleFavorite(courseId: Int) {
-        FavoritesManager.toggleFavorite(courseId)
+        viewModelScope.launch {
+            favoritesUseCases.toggleFavorite.execute(courseId)
+        }
     }
 }

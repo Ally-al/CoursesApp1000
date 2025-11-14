@@ -5,10 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.core.presentation.CoursesAdapter
 import com.example.feature_home.databinding.FragmentHomeBinding
+import com.example.feature_home.di.DaggerHomeComponent
+import com.example.feature_home.di.HomeDependencies
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
@@ -19,8 +21,21 @@ class HomeFragment : Fragment() {
     private lateinit var coursesAdapter: CoursesAdapter
 
     @Inject
-    lateinit var viewModelFactory: HomeViewModelFactory
-    private val viewModel: HomeViewModel by viewModels { viewModelFactory }
+    lateinit var homeViewModelFactory: HomeViewModelFactory
+    private lateinit var viewModel: HomeViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val deps = requireActivity().application as? HomeDependencies
+            ?: throw IllegalStateException("Application must implement HomeDependencies")
+
+        DaggerHomeComponent.factory()
+            .create(deps)
+            .inject(this)
+
+        viewModel = ViewModelProvider(this, homeViewModelFactory)[HomeViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +63,8 @@ class HomeFragment : Fragment() {
             coursesAdapter.submitList(courses)
         }
 
-        binding.tvSort.setOnClickListener { viewModel.sortCoursesByDate() }
-        binding.ivSort.setOnClickListener { viewModel.sortCoursesByDate() }
+        binding.tvSort.setOnClickListener { viewModel.sortCoursesByDateDesc() }
+        binding.ivSort.setOnClickListener { viewModel.sortCoursesByDateDesc() }
     }
 
     override fun onDestroyView() {

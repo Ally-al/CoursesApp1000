@@ -1,9 +1,6 @@
 package com.example.data.di
 
 import com.example.data.network.CoursesApi
-import com.example.data.repository.CoursesRepositoryImpl
-import com.example.domain.repository.CoursesRepository
-import com.example.domain.usecase.GetCoursesUseCase
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -28,16 +25,4 @@ object NetworkModule {
     @JvmStatic
     fun provideCoursesApi(retrofit: Retrofit): CoursesApi =
         retrofit.create(CoursesApi::class.java)
-
-    @Provides
-    @Singleton
-    @JvmStatic
-    fun provideCoursesRepository(api: CoursesApi): CoursesRepository =
-        CoursesRepositoryImpl(api)
-
-    @Provides
-    @Singleton
-    @JvmStatic
-    fun provideGetCoursesUseCase(repository: CoursesRepository): GetCoursesUseCase =
-        GetCoursesUseCase(repository)
 }

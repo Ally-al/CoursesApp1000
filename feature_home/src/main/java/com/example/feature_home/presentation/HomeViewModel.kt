@@ -1,23 +1,33 @@
 package com.example.feature_home.presentation
 
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.core.FavoritesManager
-import com.example.domain.model.Course
-import com.example.domain.usecase.GetCoursesUseCase
 import com.example.core.utils.parseIsoDateOrNull
+import com.example.domain.model.Course
+import com.example.domain.usecase.CoursesUseCases
+import com.example.domain.usecase.FavoritesUseCases
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
-    private val getCoursesUseCase: GetCoursesUseCase
+    private val coursesUseCases: CoursesUseCases,
+    private val favoritesUseCases: FavoritesUseCases
 ) : ViewModel() {
 
-    private val _courses = MutableLiveData<List<Course>>()
-    val courses: LiveData<List<Course>> get() = _courses
+    private val _sortedCourses = MutableStateFlow<List<Course>?>(null)
+
+    val courses: LiveData<List<Course>> = combine(
+        coursesUseCases.observeCoursesWithFavorites.execute(),
+        _sortedCourses
+    ) { observedCourses, sortedCourses ->
+        sortedCourses ?: observedCourses
+    }.asLiveData()
 
     init {
         loadCourses()
@@ -26,23 +36,23 @@ class HomeViewModel @Inject constructor(
     private fun loadCourses() {
         viewModelScope.launch {
             try {
-                val allCourses = getCoursesUseCase()
-                FavoritesManager.setCourses(allCourses)
-                _courses.value = allCourses
+                val loaded = coursesUseCases.getCourses.execute()
+                coursesUseCases.syncFavoritesFromServer.execute(loaded)
             } catch (e: Throwable) {
-                FavoritesManager.setCourses(emptyList())
-                _courses.value = emptyList()
+                Log.e("HomeViewModel", "Error loading courses", e)
             }
         }
     }
 
     fun toggleFavorite(courseId: Int) {
-        FavoritesManager.toggleFavorite(courseId)
-        _courses.value = FavoritesManager.allCoursesLive.value
+        viewModelScope.launch {
+            favoritesUseCases.toggleFavorite.execute(courseId)
+        }
     }
 
-    fun sortCoursesByDate() {
-        val sorted = _courses.value?.sortedByDescending { parseIsoDateOrNull(it.publishDate) ?: Date(0) }
-        _courses.value = sorted
+    fun sortCoursesByDateDesc() {
+        val current = courses.value ?: return
+        val sorted = current.sortedByDescending { parseIsoDateOrNull(it.publishDate) ?: Date(0) }
+        _sortedCourses.value = sorted
     }
 }
