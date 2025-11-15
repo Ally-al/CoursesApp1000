@@ -47,6 +47,19 @@ class CourseAdapterDelegates(
                 .centerCrop()
                 .into(binding.ivCourseImage)
 
+            binding.ivCourseImage.postDelayed({
+                val density = binding.root.context.resources.displayMetrics.density
+
+                binding.blurFavorite.cornerRadius = 14f * density
+                binding.blurFavorite.setSourceImageView(binding.ivCourseImage)
+
+                binding.blurRating.cornerRadius = 100f
+                binding.blurRating.setSourceImageView(binding.ivCourseImage)
+
+                binding.blurDate.cornerRadius = 100f
+                binding.blurDate.setSourceImageView(binding.ivCourseImage)
+            }, 100)
+
             binding.tvCourseTitle.text = course.title
             binding.tvCourseDescription.text = course.text
             binding.tvPrice.text = "${course.price} ₽"

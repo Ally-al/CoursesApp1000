@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_shape_card"
     android:backgroundTint="@color/dark_gray"
-    android:layout_marginBottom="16dp" >
+    android:layout_marginBottom="16dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivCourseImage"
@@ -20,70 +20,83 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/CourseImageShape"/>
 
-    <ImageButton
-        android:id="@+id/btnFavorite"
+    <com.example.core.presentation.BlurBackgroundView
+        android:id="@+id/blurFavorite"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:background="@drawable/rounded_shape"
-        android:backgroundTint="@color/glass"
-        android:contentDescription="@string/favorite_button_cd"
-        android:src="@drawable/ic_bookmark"
         app:layout_constraintTop_toTopOf="@id/ivCourseImage"
         app:layout_constraintEnd_toEndOf="@id/ivCourseImage"
-        android:layout_margin="8dp"/>
+        android:layout_margin="8dp">
 
-    <LinearLayout
-        android:id="@+id/ratingContainer"
+        <ImageButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_bookmark"
+            android:contentDescription="@string/favorite_button_cd"/>
+    </com.example.core.presentation.BlurBackgroundView>
+
+    <com.example.core.presentation.BlurBackgroundView
+        android:id="@+id/blurRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="2dp"
-        android:paddingHorizontal="8dp"
-        android:orientation="horizontal"
-        android:background="@drawable/rounded_shape_info"
-        android:backgroundTint="@color/glass"
-        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="@id/ivCourseImage"
         app:layout_constraintStart_toStartOf="@id/ivCourseImage"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp">
 
-        <ImageView
-            android:id="@+id/ivStar"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:src="@drawable/ic_star_fill" />
-
-        <TextView
-            android:id="@+id/tvRating"
+        <LinearLayout
+            android:id="@+id/ratingContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4.9"
-            android:textAppearance="@style/Caption"
-            android:layout_marginStart="4dp"/>
-    </LinearLayout>
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-    <LinearLayout
-        android:id="@+id/dateContainer"
+            <ImageView
+                android:id="@+id/ivStar"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/ic_star_fill" />
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.9"
+                android:textAppearance="@style/Caption"
+                android:layout_marginStart="4dp"/>
+        </LinearLayout>
+    </com.example.core.presentation.BlurBackgroundView>
+
+    <com.example.core.presentation.BlurBackgroundView
+        android:id="@+id/blurDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/rounded_shape"
-        android:backgroundTint="@color/glass"
-        android:gravity="center"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="2dp"
         app:layout_constraintBottom_toBottomOf="@id/ivCourseImage"
-        app:layout_constraintStart_toEndOf="@id/ratingContainer"
+        app:layout_constraintStart_toEndOf="@id/blurRating"
         android:layout_marginStart="4dp"
         android:layout_marginBottom="8dp">
 
-        <TextView
-            android:id="@+id/tvDate"
+        <LinearLayout
+            android:id="@+id/dateContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="22 Мая 2024"
-            android:textAppearance="@style/Caption" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp">
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22 Мая 2024"
+                android:textAppearance="@style/Caption" />
+        </LinearLayout>
+    </com.example.core.presentation.BlurBackgroundView>
 
     <TextView
         android:id="@+id/tvCourseTitle"
